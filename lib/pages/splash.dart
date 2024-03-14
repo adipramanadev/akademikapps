@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
 import "homepage.dart";
 
 class Splash extends StatefulWidget {
@@ -58,12 +59,24 @@ class _SplashState extends State<Splash> {
                     SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                    Text(
                       "Akademi",
-                      style: TextStyle(
-                        color: Color(0xff000000),
-                        fontSize: 24,
-                        fontWeight: FontWeight.normal,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontStyle: FontStyle.normal,
+                        color: Color(0xff3956e8),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      "Apps",
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.clip,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20,
+                        color: Color(0xff3453ea),
                       ),
                     ),
                   ],

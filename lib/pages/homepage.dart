@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'siswapage.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -56,14 +58,20 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xff3A57E8),
+              ),
               accountName: Text("Ahmah Fauzan"),
               accountEmail: Text("test@gmail.com"),
             ),
             ListTile(
               leading: Icon(Icons.account_circle),
-              title: Text("Profile"),
+              title: Text("Halaman Siswa"),
               onTap: () {
-                // Navigasi ke halaman profil atau fungsi lain
+                // Navigasi ke halaman siswa atau fungsi lain
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Siswa(),
+                ));
               },
             ),
             ListTile(

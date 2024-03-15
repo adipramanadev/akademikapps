@@ -8,6 +8,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex =
+      0; // Menambahkan state untuk mengetahui item mana yang sedang dipilih
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Mengubah state berdasarkan item yang dipilih
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +38,50 @@ class _HomePageState extends State<HomePage> {
             color: Color(0xfffff8f8),
           ),
         ),
-        leading: Icon(
-          Icons.menu,
-          color: Color(0xffffffff),
-          size: 24,
+        leading: Builder(
+          // Using Builder to get the correct context
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Color(0xffffffff)),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
         ),
         actions: [
           Icon(Icons.person, color: Color(0xffffffff), size: 24),
         ],
+      ),
+      // Bagian drawer, body, dan bottomNavigationBar tetap sama
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("Ahmah Fauzan"),
+              accountEmail: Text("test@gmail.com"),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text("Profile"),
+              onTap: () {
+                // Navigasi ke halaman profil atau fungsi lain
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Settings"),
+              onTap: () {
+                // Navigasi ke halaman settings atau fungsi lain
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text("Log Out"),
+              onTap: () {
+                // Fungsi untuk log out
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -44,7 +89,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           GridView(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             physics: ScrollPhysics(),

@@ -1,9 +1,70 @@
 import 'package:akademikapps/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
+import 'package:http/http.dart' as http;
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String phpSessionId = ''; // To store the PHPSESSID cookie value
+
+  // Extract and store PHPSESSID from the response
+  void _updateCookie(http.Response response) {
+    String? rawCookie = response.headers['set-cookie'];
+    if (rawCookie != null) {
+      RegExp regExp = RegExp('PHPSESSID=([^;]+)');
+      var match = regExp.firstMatch(rawCookie);
+      if (match != null) {
+        phpSessionId = match.group(1)!; // Extract the PHPSESSID value
+      }
+    }
+  }
+
+  // Use PHPSESSID for subsequent requests
+  Map<String, String> _getHeaders() {
+    if (phpSessionId.isNotEmpty) {
+      return {
+        'Cookie': 'PHPSESSID=$phpSessionId',
+        // Include other headers if necessary
+      };
+    }
+    return {};
+  }
+
+  Future<void> login() async {
+    try {
+      var response = await http.post(
+        Uri.parse("http://172.17.5.16/akadmikapp/indexapi/login"),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          "username": emailController.text,
+          "password": passwordController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        _updateCookie(response); // Specifically look for and store PHPSESSID
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        print("Login failed. Status code: ${response.statusCode}");
+        // Handle login failure here
+      }
+    } catch (e) {
+      print("Error during login: $e");
+      // Handle exceptions here
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +130,7 @@ class Login extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(vertical: 16, horizontal: 0),
                       child: TextField(
-                        controller: TextEditingController(),
+                        controller: emailController,
                         obscureText: false,
                         textAlign: TextAlign.justify,
                         maxLines: 1,
@@ -95,7 +156,7 @@ class Login extends StatelessWidget {
                             borderSide:
                                 BorderSide(color: Color(0xffeae9e9), width: 2),
                           ),
-                          hintText: "Email",
+                          hintText: "Email Untuk email",
                           hintStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal,
@@ -112,7 +173,7 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: TextField(
-                        controller: TextEditingController(),
+                        controller: passwordController,
                         obscureText: false,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -158,11 +219,9 @@ class Login extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(),
-                            ),
-                          );
+                          setState(() {
+                            login();
+                          });
                         },
                         color: Color(0xff3a57e8),
                         elevation: 0,

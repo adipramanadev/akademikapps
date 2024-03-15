@@ -2,8 +2,18 @@ import 'package:akademikapps/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +79,7 @@ class Login extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(vertical: 16, horizontal: 0),
                       child: TextField(
-                        controller: TextEditingController(),
+                        controller: emailController,
                         obscureText: false,
                         textAlign: TextAlign.justify,
                         maxLines: 1,
@@ -95,7 +105,7 @@ class Login extends StatelessWidget {
                             borderSide:
                                 BorderSide(color: Color(0xffeae9e9), width: 2),
                           ),
-                          hintText: "Email",
+                          hintText: "Email Untuk email",
                           hintStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal,
@@ -112,7 +122,7 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: TextField(
-                        controller: TextEditingController(),
+                        controller: passwordController,
                         obscureText: false,
                         textAlign: TextAlign.start,
                         maxLines: 1,

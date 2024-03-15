@@ -43,10 +43,10 @@ class _SplashState extends State<Splash> {
                 color: Color(0x6cdedede),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.zero,
-                border: Border.all(color: Color(0x4d9e9e9e), width: 1),
+                border: Border.all(color: const Color(0x4d9e9e9e), width: 1),
               ),
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,6 @@
+import 'package:akademikapps/pages/register.dart';
 import 'package:flutter/material.dart';
+import 'homepage.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -155,7 +157,13 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: MaterialButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
+                        },
                         color: Color(0xff3a57e8),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -177,40 +185,51 @@ class Login extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Align(
-                              alignment: Alignment(0.1, 0.0),
-                              child: Text(
-                                "belum punya akun ?",
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.clip,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 14,
-                                  color: Color(0xff000000),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: Align(
+                                alignment: Alignment(0.1, 0.0),
+                                child: Text(
+                                  "belum punya akun ?",
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: 14,
+                                    color: Color(0xff000000),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            "Daftar Disini",
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 12,
-                              color: Color(0xff3b59ec),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => Register(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Daftar Disini",
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 12,
+                                  color: Color(0xff3b59ec),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

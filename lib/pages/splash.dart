@@ -1,6 +1,6 @@
+import "package:akademikapps/pages/login.dart";
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
-import "homepage.dart";
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -17,7 +17,9 @@ class _SplashState extends State<Splash> {
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(
+          builder: (context) => const Login(),
+        ),
       );
     });
   }
@@ -41,10 +43,10 @@ class _SplashState extends State<Splash> {
                 color: Color(0x6cdedede),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.zero,
-                border: Border.all(color: Color(0x4d9e9e9e), width: 1),
+                border: Border.all(color: const Color(0x4d9e9e9e), width: 1),
               ),
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,

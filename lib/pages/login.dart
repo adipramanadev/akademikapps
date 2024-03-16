@@ -79,6 +79,12 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void initState() {
+    login();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffe6e6e6),
@@ -231,9 +237,19 @@ class _LoginState extends State<Login> {
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: MaterialButton(
                         onPressed: () {
-                          setState(() {
+                          //jika textfield masih kosong
+                          if (emailController.text.isEmpty ||
+                              passwordController.text.isEmpty) {
+                            //tampilkan pesan
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Email dan Password harus diisi"),
+                              ),
+                            );
+                          } else {
+                            //jika textfield sudah terisi
                             login();
-                          });
+                          }
                         },
                         color: Color(0xff3a57e8),
                         elevation: 0,

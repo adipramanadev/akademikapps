@@ -16,6 +16,11 @@ class _HomePageState extends State<HomePage> {
   String? username;
   Future<String?> _getUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedUsername = prefs.getString('username');
+    String? savedPassword = prefs.getString('password');
+    if (savedUsername != null && savedPassword != null) {
+      return savedUsername;
+    }
     return prefs.getString('username');
   }
 
@@ -59,6 +64,16 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void initializeData() async {
+    int fetchedTotalSiswa = await fetchTotalSiswa();
+    String? fetchedUsername = await _getUsername();
+
+    setState(() {
+      totalSiswa = fetchedTotalSiswa;
+      username = fetchedUsername ?? 'User'; // Set a default name if null
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -75,29 +90,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  //function getTotalSiswa
-  // Future<void> getSiswa() async {
-  //   try {
-  //     var response = await http.get(
-  //       Uri.parse(
-  //           "https://kptkgowa.adipramanacomputer.com/dashboardapi/countsiswa"),
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded',
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //       var data = json.decode(response.body);
-  //       setState(() {
-  //         totalSiswa = data;
-  //       });
-  //       print(data); // Update totalSiswa with fetched data
-  //     } else {
-  //       print("Failed to load data. Status code: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error occurred: $e");
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +103,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.zero,
         ),
         title: Text(
-          username.toString(),
+          username != null ? "Selamat Datang, $username" : "Selamat Datang",
           style: TextStyle(
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.normal,
@@ -140,7 +132,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color(0xff3A57E8),
               ),
-              accountName: Text("Ahmah Fauzan"),
+              accountName: Text(username ?? "Your Name Here"),
               accountEmail: Text("test@gmail.com"),
             ),
             ListTile(

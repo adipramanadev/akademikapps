@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'siswapage.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,46 +12,92 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex =
-      0; // Menambahkan state untuk mengetahui item mana yang sedang dipilih
-  int _totalSiswa = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index; // Mengubah state berdasarkan item yang dipilih
-    });
+  int totalSiswa = 0;
+  String? username;
+  Future<String?> _getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
   }
 
-  //function getTotalSiswa
-  Future<void> getSiswa() async {
+  Future<void> loginUser(String username, String tokenJwt) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('tokenJwt', tokenJwt);
+  }
+
+  Future<int> fetchTotalSiswa() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('tokenJwt') ?? '';
+
     try {
-      var response = await http.get(
+      final response = await http.get(
         Uri.parse(
-            "https://kptkgowa.adipramanacomputer.com/dashboardapi/countsiswa"),
+            'https://kptkgowa.adipramanacomputer.com/dashboardapi/countsiswa'),
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Cookie': token,
         },
       );
+
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          _totalSiswa =
-              data['total']; // Update totalSiswa with fetched data
-        });
+        int totalSiswa = int.parse(response.body);
+        return totalSiswa;
       } else {
-        print("Failed to load data. Status code: ${response.statusCode}");
+        // Tangani kesalahan jika respons tidak berhasil.
+        throw Exception('Gagal mengambil data total siswa');
       }
     } catch (e) {
-      print("Error occurred: $e");
+      if (e
+          .toString()
+          .contains("Connection closed before full header was received")) {
+        // Handle the specific error condition here
+        // You can add custom handling logic for this case
+        Get.snackbar(
+            "Error", "Connection closed before full header was received");
+      }
+      return 0;
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getSiswa(); // Call getSiswa when the widget
+    // getSiswa(); // Call getSiswa when the widget
+    fetchTotalSiswa().then((value) {
+      setState(() {
+        totalSiswa = value;
+      });
+      _getUsername().then((value) {
+        setState(() {
+          username = value;
+        });
+      });
+    });
   }
 
+  //function getTotalSiswa
+  // Future<void> getSiswa() async {
+  //   try {
+  //     var response = await http.get(
+  //       Uri.parse(
+  //           "https://kptkgowa.adipramanacomputer.com/dashboardapi/countsiswa"),
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       var data = json.decode(response.body);
+  //       setState(() {
+  //         totalSiswa = data;
+  //       });
+  //       print(data); // Update totalSiswa with fetched data
+  //     } else {
+  //       print("Failed to load data. Status code: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error occurred: $e");
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +111,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.zero,
         ),
         title: Text(
-          "Ahmah Fauzan",
+          username.toString(),
           style: TextStyle(
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.normal,
@@ -159,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       //menampilkan data countsiswa
-                      _totalSiswa.toString(),
+                      totalSiswa.toString(),
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.clip,
                       style: TextStyle(

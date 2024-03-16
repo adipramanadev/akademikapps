@@ -1,5 +1,6 @@
 import 'package:akademikapps/pages/register.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,6 +40,17 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> login() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedUsername = prefs.getString('username');
+    String? savedPassword = prefs.getString('password');
+
+    if (savedUsername != null && savedPassword != null) {
+      // Jika ada data login yang tersimpan, isi field controller dengan data tersebut
+      setState(() {
+        emailController.text = savedUsername;
+        passwordController.text = savedPassword;
+      });
+    }
     try {
       var response = await http.post(
         Uri.parse("https://kptkgowa.adipramanacomputer.com/indexapi/login"),

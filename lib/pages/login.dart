@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
   Future<void> login() async {
     try {
       var response = await http.post(
-        Uri.parse("http://172.17.5.16/akadmikapp/indexapi/login"),
+        Uri.parse("https://kptkgowa.adipramanacomputer.com/indexapi/login"),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },

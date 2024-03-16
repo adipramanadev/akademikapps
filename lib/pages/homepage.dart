@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'siswapage.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,11 +14,42 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex =
       0; // Menambahkan state untuk mengetahui item mana yang sedang dipilih
-
+  int _totalSiswa = 0;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index; // Mengubah state berdasarkan item yang dipilih
     });
+  }
+
+  //function getTotalSiswa
+  Future<void> getSiswa() async {
+    try {
+      var response = await http.get(
+        Uri.parse(
+            "https://kptkgowa.adipramanacomputer.com/dashboardapi/countsiswa"),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          _totalSiswa =
+              data['total']; // Update totalSiswa with fetched data
+        });
+      } else {
+        print("Failed to load data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error occurred: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSiswa(); // Call getSiswa when the widget
   }
 
   @override
@@ -125,7 +158,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      "1001",
+                      //menampilkan data countsiswa
+                      _totalSiswa.toString(),
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.clip,
                       style: TextStyle(
